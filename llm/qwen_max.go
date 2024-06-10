@@ -46,6 +46,7 @@ func Qwen(userContent string) (string, error) {
 			3. 如果是支出，金额使用负数表示。
 			4. 所有账单类型必须使用JSON数组返回，并且只需要提供JSON数据，并且消息类型为纯文本，不要使用markdown。
 			5. 你不需要输出其他文字，我只需要你提供我的账单JSON数据。请你严格按照以下两个示例进行回复，只输出结果。
+			6. 以下示例中的日期date属性不是真实的数据，如果你需要真实的数据，请你调用函数GetCurrentDate
 			示例1:
 			输入：
 			"""
@@ -60,12 +61,13 @@ func Qwen(userContent string) (string, error) {
 			示例2:
 			输入：
 			"""
-			我今天点外卖花了20快钱，然后花了80块钱买奶茶
+			我昨天点外卖花了20快钱，然后花了80块钱买奶茶
 			"""
 
 			输出
 			"""
-			[{"event": "点外卖", "type": "支出", "amount": -20, "tag": "餐饮", "date":"2024/06/07"},{"event": "买奶茶", "type": "支出", "amount": -80, "tag": "餐饮", "date":"2024/06/07"}]
+			[{"event": "点外卖", "type": "支出", "amount": -20, "tag": "餐饮", "date":"2024/06/06"},{"event": "买奶茶", "type": "支出", "amount": -80, "tag": "餐饮", "date":"2024/06/06"}]
+			"""
 
 			示例3:
 			输入：
@@ -75,10 +77,10 @@ func Qwen(userContent string) (string, error) {
 
 			输出
 			"""
-			[{"event": "发工资", "type": "收入", "amount": 20000, "tag": "工资", "date":"2024/06/07"}]
-			""""
+			[{"event": "发工资", "type": "收入", "amount": 20000, "tag": "工资", "date":"2024/06/06"}]
+			"""
 `},
-			{Role: "user", Content: userContent}},
+			{Role: "user", Content: "今天是" + util.GetCurrentDate() + "，" + userContent}},
 	}
 
 	tpl, err := template.New("template").Funcs(funcMap).Parse(payload)
